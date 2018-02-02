@@ -1,5 +1,68 @@
 {% extends "fellowships-base.html" %}
 
+{% block template_id %}fellows-directory{% endblock %}
+
 {% block body %}
-fellows directory
+<div class="row">
+  <div class="col-md-12 col-lg-9">
+    <div class="mb-4">
+      <h1 class="h1-white">Fellows Directory</h1>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-5">
+  <div class="col-12">
+    <h3 class="h3-black">Senior Fellows</h3>
+    {% lorem 1 p %}
+    <div class="row featured-fellow" data-type="senior"></div>
+  </div>
+  <div class="col-12 text-center mt-3 mb-5">
+    <button class="btn btn-ghost">See all senior fellows</button>
+  </div>
+</div>
+
+<div class="row mb-5">
+  <div class="col-12">
+    <h3 class="h3-black">Science Fellows</h3>
+    {% lorem 1 p %}
+    <div class="row featured-fellow" data-type="science"></div>
+  </div>
+  <div class="col-12 text-center mt-3 mb-5">
+    <button class="btn btn-ghost">See all science fellows</button>
+  </div>
+</div>
+
+<div class="row mb-5">
+  <div class="col-12">
+    <h3 class="h3-black">Open Web Fellows</h3>
+    {% lorem 1 p %}
+    <div class="row featured-fellow" data-type="open web"></div>
+  </div>
+  <div class="col-12 text-center mt-3 mb-5">
+    <button class="btn btn-ghost">See all open web fellows</button>
+  </div>
+</div>
+
+<div class="row mb-5">
+  <div class="col-12">
+    <h3 class="h3-black">Tech Policy Fellows</h3>
+    {% lorem 1 p %}
+    <div class="row featured-fellow" data-type="tech policy"></div>
+  </div>
+  <div class="col-12 text-center mt-3 mb-5">
+    <button class="btn btn-ghost">See all tech policy fellows</button>
+  </div>
+</div>
+
+<div class="row mb-5">
+  <div class="col-12">
+    <h3 class="h3-black">Media Fellows</h3>
+    {% lorem 1 p %}
+    <div class="row featured-fellow" data-type="media"></div>
+  </div>
+  <div class="col-12 text-center mt-3 mb-5">
+    <button class="btn btn-ghost">See all media fellows</button>
+  </div>
+</div>
 {% endblock %}

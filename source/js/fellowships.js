@@ -5,6 +5,48 @@ import ReactDOM from 'react-dom';
 
 import Person from './components/people/person.jsx';
 
+function getFellows(type = ``, callback) {
+  let req = new XMLHttpRequest();
+
+  req.addEventListener(`load`, () => {
+    callback.call(this, JSON.parse(req.response));
+  });
+
+  req.open(`GET`, `http://test.example.com:8000/api/pulse/profiles/search/?profile_type=fellow&program_type=${type} fellow`);
+  req.send();
+}
+
+function processFellowData(fellow) {
+  let links = {};
+
+  if ( fellow.twitter ) {
+    links.twitter = fellow.twitter;
+  }
+
+  if ( fellow.linkedin ) {
+    links.linkedIn = fellow.linkedin;
+  }
+
+  let metadata = {
+    'internet_health_issues': fellow.issues,
+    links: links,
+    name: fellow.custom_name,
+    role: `${fellow.program_type}${fellow.program_year ? `, ${fellow.program_year}` : ``}`,
+    image: fellow.thumbnail,
+    affiliations: [ fellow.affiliation ]
+  };
+
+  return <Person metadata={metadata} key={fellow.custom_name} />;
+}
+
+function renderFellowsSection(type = ``) {
+  getFellows(type, fellows => {
+    console.log(`fellows`, fellows);
+
+    ReactDOM.render(fellows.map(processFellowData), document.querySelector(`#view-fellows-directory .featured-fellow[data-type='${type}']`));
+  });
+}
+
 // Embed various Fellowships pages related React components
 function injectReactComponents() {
   // Science Fellowship
@@ -59,6 +101,15 @@ function injectReactComponents() {
     };
 
     ReactDOM.render(<Person metadata={metadata} />, document.getElementById(`featured-fellow-support-page`));
+  }
+
+  // Fellows on Fellows Directory page
+  if (document.querySelectorAll(`#view-fellows-directory .featured-fellow`)) {
+    let sections = document.querySelectorAll(`#view-fellows-directory .featured-fellow`);
+
+    sections.forEach(section => {
+      renderFellowsSection(section.dataset.type);
+    });
   }
 }
 
