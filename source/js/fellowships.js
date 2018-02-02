@@ -12,6 +12,7 @@ function getFellows(type = ``, callback) {
     callback.call(this, JSON.parse(req.response));
   });
 
+  // TODO:FIXME: fix this hardcoded url once this endpoint is available on Pulse API staging and production
   req.open(`GET`, `http://test.example.com:8000/api/pulse/profiles/search/?profile_type=fellow&program_type=${type} fellow`);
   req.send();
 }
