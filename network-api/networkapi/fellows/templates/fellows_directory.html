@@ -11,58 +11,17 @@
   </div>
 </div>
 
+{% for type in types %}
 <div class="row mb-5">
   <div class="col-12">
-    <h3 class="h3-black">Senior Fellows</h3>
+    <h3 class="h3-black text-capitalize">{{ type }} Fellows</h3>
     {% lorem 1 p %}
-    <div class="row featured-fellow" data-type="senior"></div>
+    <div class="row featured-fellow" data-type="{{type}}"></div>
   </div>
   <div class="col-12 text-center mt-3 mb-5">
-    <button class="btn btn-ghost">See all senior fellows</button>
+    <a href="/directory/" class="btn btn-ghost">See all {{type}} fellows</a>
   </div>
 </div>
+{% endfor %}
 
-<div class="row mb-5">
-  <div class="col-12">
-    <h3 class="h3-black">Science Fellows</h3>
-    {% lorem 1 p %}
-    <div class="row featured-fellow" data-type="science"></div>
-  </div>
-  <div class="col-12 text-center mt-3 mb-5">
-    <button class="btn btn-ghost">See all science fellows</button>
-  </div>
-</div>
-
-<div class="row mb-5">
-  <div class="col-12">
-    <h3 class="h3-black">Open Web Fellows</h3>
-    {% lorem 1 p %}
-    <div class="row featured-fellow" data-type="open web"></div>
-  </div>
-  <div class="col-12 text-center mt-3 mb-5">
-    <button class="btn btn-ghost">See all open web fellows</button>
-  </div>
-</div>
-
-<div class="row mb-5">
-  <div class="col-12">
-    <h3 class="h3-black">Tech Policy Fellows</h3>
-    {% lorem 1 p %}
-    <div class="row featured-fellow" data-type="tech policy"></div>
-  </div>
-  <div class="col-12 text-center mt-3 mb-5">
-    <button class="btn btn-ghost">See all tech policy fellows</button>
-  </div>
-</div>
-
-<div class="row mb-5">
-  <div class="col-12">
-    <h3 class="h3-black">Media Fellows</h3>
-    {% lorem 1 p %}
-    <div class="row featured-fellow" data-type="media"></div>
-  </div>
-  <div class="col-12 text-center mt-3 mb-5">
-    <button class="btn btn-ghost">See all media fellows</button>
-  </div>
-</div>
 {% endblock %}
