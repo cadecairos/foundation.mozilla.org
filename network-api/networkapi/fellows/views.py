@@ -7,7 +7,7 @@ def fellows_home(request):
 
 
 def fellows_directory(request):
-    context = {'types': ['senior', 'science', 'open web', 'tech policy', 'media']};
+    context = {'types': ['senior', 'science', 'open web', 'tech policy', 'media']}
 
     return render(request, 'fellows_directory.html', context)
 
