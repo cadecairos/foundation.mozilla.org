@@ -3,7 +3,6 @@
 {% block template_id %}fellows-directory-{{type|slugify}}{% endblock %}
 
 {% block body %}
-
 <div id="fellowship-breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item small-gray">
@@ -25,16 +24,4 @@
 
 <div id="fellows-directory-fellows-by-type" data-type="{{type}}">
 </div>
-
-{% for year in years %}
-<div class="row mb-5">
-  <div class="col-12">
-    <div class="mb-4">
-      <h2 class="h2-typeaccents-gray">{{year}}</h2>
-    </div>
-  </div>
-</div>
-{% endfor %}
-
-
 {% endblock %}

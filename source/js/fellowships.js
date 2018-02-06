@@ -16,7 +16,7 @@ function getFellows(params, callback) {
   });
 
   // TODO:FIXME: fix this hardcoded url once this endpoint is available on Pulse API staging and production
-  req.open(`GET`, `http://test.example.com:8000/api/pulse/profiles/search/?${queryString}`);
+  req.open(`GET`, `http://test.example.com:8000/api/pulse/profiles/?${queryString}`);
   req.send();
 }
 
@@ -44,36 +44,86 @@ function renderFellowCard(fellow) {
   return <Person metadata={metadata} key={fellow.custom_name} />;
 }
 
+function groupFellowsByAttr(attribute, fellows) {
+  if (!attribute) {
+    return false;
+  }
+
+  let fellowsGroup = {};
+
+  fellows.forEach(fellow => {
+    let attr = fellow[attribute];
+
+    if (!attr) {
+      return;
+    }
+
+    if (!fellowsGroup[attr]) {
+      fellowsGroup[attr] = [fellow];
+    } else {
+      fellowsGroup[attr].push(fellow);
+    }
+  });
+
+  return fellowsGroup;
+}
+
 function renderFellowsOnDirectoryPage() {
-  let sections = document.querySelectorAll(`#view-fellows-directory .featured-fellow`);
+  let getTypeSlug = function(type) {
+    return type.toLowerCase().replace(`fellow`,``).trim().replace(/\s/g, `-`);
+  };
 
-  sections.forEach(section => {
-    let type = section.dataset.type;
+  let renderFilterOption = function(option) {
+    return <button
+      className="btn btn-link text-capitalize"
+      key={option}
+      onClick={(event) => { document.getElementById(event.target.dataset.targetId).scrollIntoView(true); }}
+      data-target-id={`fellowships-directory-${getTypeSlug(option)}`}
+    >
+      {`${option}${option === `senior` ? ` Fellow` :``}`}
+    </button>;
+  };
 
-    getFellows({'program_type': `${type} fellow`, 'program_year': `2017`}, fellows => {
-      ReactDOM.render(fellows.map(renderFellowCard), document.querySelector(`#view-fellows-directory .featured-fellow[data-type='${type}']`));
+  getFellows({'program_year': `2017`}, fellows => {
+    let fellowsByType = groupFellowsByAttr(`program_type`, fellows);
+    const ORDER = [ `senior`, `science`, `open web`, `tech policy`, `media`];
+
+    // render filter bar
+    let filterBar = <div className="row">
+      <div className="col-12">
+        <div id="fellowships-directory-filter" className="d-flex flex-wrap p-2">
+          <div className="d-inline-block mr-2"><strong>Areas:</strong></div>
+          { ORDER.map(renderFilterOption) }
+        </div>
+      </div>
+    </div>;
+
+    // render program type sections
+    let sections = Object.keys(fellowsByType).sort((a, b) => {
+      return ORDER.indexOf(a.replace(`fellow`,``).trim()) - ORDER.indexOf(b.replace(`fellow`,``).trim());
+    }).map(type => {
+      return <div className="row my-4" key={type} id={`fellowships-directory-${getTypeSlug(type)}`}>
+        <div className="col-12">
+          <h3 className="h3-black text-capitalize">{type}s</h3>
+          <div className="row">
+            {fellowsByType[type].map(renderFellowCard)}
+          </div>
+        </div>
+        <div className="col-12 text-center mt-3 mb-5">
+          <a href={`/fellowships/directory/${getTypeSlug(type)}`} className="btn btn-ghost">See all {type}s</a>
+        </div>
+      </div>;
     });
+
+    ReactDOM.render(<div>{filterBar}{sections}</div>, document.getElementById(`fellows-directory-featured-fellows`));
   });
 }
 
 function renderFellowsOnDirectoryByTypePage() {
-  let type = document.querySelector(`#fellows-directory-fellows-by-type`).dataset.type;
-  let fellowsByYear = {};
+  let type = document.getElementById(`fellows-directory-fellows-by-type`).dataset.type;
 
   getFellows({'program_type': `${type} fellow`}, fellows => {
-    fellows.forEach(fellow => {
-      let year = fellow.program_year;
-
-      if (!year) {
-        return;
-      }
-
-      if (!fellowsByYear[year]) {
-        fellowsByYear[year] = [fellow];
-      } else {
-        fellowsByYear[year].push(fellow);
-      }
-    });
+    let fellowsByYear = groupFellowsByAttr(`program_year`, fellows);
 
     let sections = Object.keys(fellowsByYear).sort().reverse().map(year => {
       return <div className="row mb-5" key={year}>
@@ -86,7 +136,7 @@ function renderFellowsOnDirectoryByTypePage() {
       </div>;
     });
 
-    ReactDOM.render(sections, document.querySelector(`#fellows-directory-fellows-by-type`));
+    ReactDOM.render(sections, document.getElementById(`fellows-directory-fellows-by-type`));
   });
 }
 
@@ -147,12 +197,12 @@ function injectReactComponents() {
   }
 
   // Fellows on Fellows Directory page
-  if (document.querySelectorAll(`#view-fellows-directory .featured-fellow`)) {
+  if (document.querySelectorAll(`#fellows-directory-featured-fellows`)) {
     renderFellowsOnDirectoryPage();
   }
 
   // Fellows on individual Directory page (e.g., science directory, open web directory)
-  if (document.querySelector(`#fellows-directory-fellows-by-type`)) {
+  if (document.getElementById(`fellows-directory-fellows-by-type`)) {
     renderFellowsOnDirectoryByTypePage();
   }
 }

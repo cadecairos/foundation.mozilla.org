@@ -15,11 +15,7 @@ def fellows_openweb(request):
 
 
 def fellows_directory(request):
-    context = {
-        'types': ['senior', 'science', 'open web', 'tech policy', 'media']
-    }
-
-    return render(request, 'fellows_directory.html', context)
+    return render(request, 'fellows_directory.html')
 
 
 def fellows_directory_senior(request):

@@ -11,16 +11,6 @@
   </div>
 </div>
 
-{% for type in types %}
-<div class="row mb-5">
-  <div class="col-12">
-    <h3 class="h3-black text-capitalize">{{ type }} Fellows</h3>
-    <div class="row featured-fellow" data-type="{{type}}"></div>
-  </div>
-  <div class="col-12 text-center mt-3 mb-5">
-    <a href="/fellowships/directory/{{type}}" class="btn btn-ghost">See all {{type}} fellows</a>
-  </div>
-</div>
-{% endfor %}
+<div id="fellows-directory-featured-fellows"></div>
 
 {% endblock %}

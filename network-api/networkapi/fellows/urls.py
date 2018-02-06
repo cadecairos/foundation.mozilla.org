@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^directory/open-web$',
         views.fellows_directory_open_web,
         name='fellowships-directory-open-web'),
-    url(r'^directory/senior$',
+    url(r'^directory/tech-policy$',
         views.fellows_directory_tech_policy,
         name='fellowships-directory-tech-policy'),
     url(r'^directory/media$',
