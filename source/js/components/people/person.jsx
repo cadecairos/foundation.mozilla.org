@@ -116,7 +116,7 @@ export default class Person extends React.Component {
               <div className="person-social-links mt-3">
                 <div className="row flex-column-reverse flex-md-row justify-content-between">
                   {socialLinks.length > 0 &&
-                    <div className="col-12 col-md my-1 my-0">{socialLinks}</div>
+                  <div className="col-12 col-md my-1 my-0">{socialLinks}</div>
                   }
                   {this.props.metadata.links.interview &&
                   <div className="col-12 col-md my-1 my-0">

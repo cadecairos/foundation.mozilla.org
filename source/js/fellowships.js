@@ -5,7 +5,10 @@ import ReactDOM from 'react-dom';
 
 import Person from './components/people/person.jsx';
 
-function getFellows(type = ``, callback) {
+function getFellows(params, callback) {
+  Object.assign(params, {'profile_type': `fellow`});
+
+  let queryString = Object.entries(params).map(pair => pair.map(encodeURIComponent).join(`=`)).join(`&`);
   let req = new XMLHttpRequest();
 
   req.addEventListener(`load`, () => {
@@ -13,11 +16,11 @@ function getFellows(type = ``, callback) {
   });
 
   // TODO:FIXME: fix this hardcoded url once this endpoint is available on Pulse API staging and production
-  req.open(`GET`, `http://test.example.com:8000/api/pulse/profiles/search/?profile_type=fellow&program_type=${type} fellow`);
+  req.open(`GET`, `http://test.example.com:8000/api/pulse/profiles/search/?${queryString}`);
   req.send();
 }
 
-function processFellowData(fellow) {
+function renderFellowCard(fellow) {
   let links = {};
 
   if ( fellow.twitter ) {
@@ -39,14 +42,6 @@ function processFellowData(fellow) {
   };
 
   return <Person metadata={metadata} key={fellow.custom_name} />;
-}
-
-function renderFellowsSection(type = ``) {
-  getFellows(type, fellows => {
-    console.log(`fellows`, fellows);
-
-    ReactDOM.render(fellows.map(processFellowData), document.querySelector(`#view-fellows-directory .featured-fellow[data-type='${type}']`));
-  });
 }
 
 // Embed various Fellowships pages related React components
@@ -110,7 +105,47 @@ function injectReactComponents() {
     let sections = document.querySelectorAll(`#view-fellows-directory .featured-fellow`);
 
     sections.forEach(section => {
-      renderFellowsSection(section.dataset.type);
+      let type = section.dataset.type;
+
+      getFellows({'program_type': `${type} fellow`, 'program_year': `2017`}, fellows => {
+        ReactDOM.render(fellows.map(renderFellowCard), document.querySelector(`#view-fellows-directory .featured-fellow[data-type='${type}']`));
+      });
+    });
+  }
+
+  // Fellows on individual Directory page (e.g., science directory, open web directory)
+  if (document.querySelector(`#fellows-directory-fellows-by-type`)) {
+    let type = document.querySelector(`#fellows-directory-fellows-by-type`).dataset.type;
+    let fellowsByYear = {};
+
+    getFellows({'program_type': `${type} fellow`}, fellows => {
+
+      fellows.forEach(fellow => {
+        let year = fellow.program_year;
+
+        if (!year) {
+          return;
+        }
+
+        if (!fellowsByYear[year]) {
+          fellowsByYear[year] = [fellow];
+        } else {
+          fellowsByYear[year].push(fellow);
+        }
+      });
+
+      let yearSections = Object.keys(fellowsByYear).sort().reverse().map(year => {
+        return <div className="row mb-5" key={year}>
+          <div className="col-12">
+            <div className="mb-4">
+              <h2 className="h2-typeaccents-gray">{year}</h2>
+            </div>
+          </div>
+          {fellowsByYear[year].map(renderFellowCard)}
+        </div>;
+      });
+
+      ReactDOM.render(yearSections, document.querySelector(`#fellows-directory-fellows-by-type`));
     });
   }
 }

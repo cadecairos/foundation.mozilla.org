@@ -15,11 +15,10 @@
 <div class="row mb-5">
   <div class="col-12">
     <h3 class="h3-black text-capitalize">{{ type }} Fellows</h3>
-    {% lorem 1 p %}
     <div class="row featured-fellow" data-type="{{type}}"></div>
   </div>
   <div class="col-12 text-center mt-3 mb-5">
-    <a href="/directory/" class="btn btn-ghost">See all {{type}} fellows</a>
+    <a href="/fellowships/directory/{{type}}" class="btn btn-ghost">See all {{type}} fellows</a>
   </div>
 </div>
 {% endfor %}
