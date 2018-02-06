@@ -44,6 +44,52 @@ function renderFellowCard(fellow) {
   return <Person metadata={metadata} key={fellow.custom_name} />;
 }
 
+function renderFellowsOnDirectoryPage() {
+  let sections = document.querySelectorAll(`#view-fellows-directory .featured-fellow`);
+
+  sections.forEach(section => {
+    let type = section.dataset.type;
+
+    getFellows({'program_type': `${type} fellow`, 'program_year': `2017`}, fellows => {
+      ReactDOM.render(fellows.map(renderFellowCard), document.querySelector(`#view-fellows-directory .featured-fellow[data-type='${type}']`));
+    });
+  });
+}
+
+function renderFellowsOnDirectoryByTypePage() {
+  let type = document.querySelector(`#fellows-directory-fellows-by-type`).dataset.type;
+  let fellowsByYear = {};
+
+  getFellows({'program_type': `${type} fellow`}, fellows => {
+    fellows.forEach(fellow => {
+      let year = fellow.program_year;
+
+      if (!year) {
+        return;
+      }
+
+      if (!fellowsByYear[year]) {
+        fellowsByYear[year] = [fellow];
+      } else {
+        fellowsByYear[year].push(fellow);
+      }
+    });
+
+    let sections = Object.keys(fellowsByYear).sort().reverse().map(year => {
+      return <div className="row mb-5" key={year}>
+        <div className="col-12">
+          <div className="mb-4">
+            <h2 className="h2-typeaccents-gray">{year}</h2>
+          </div>
+        </div>
+        {fellowsByYear[year].map(renderFellowCard)}
+      </div>;
+    });
+
+    ReactDOM.render(sections, document.querySelector(`#fellows-directory-fellows-by-type`));
+  });
+}
+
 // Embed various Fellowships pages related React components
 function injectReactComponents() {
   // Science Fellowship
@@ -102,51 +148,12 @@ function injectReactComponents() {
 
   // Fellows on Fellows Directory page
   if (document.querySelectorAll(`#view-fellows-directory .featured-fellow`)) {
-    let sections = document.querySelectorAll(`#view-fellows-directory .featured-fellow`);
-
-    sections.forEach(section => {
-      let type = section.dataset.type;
-
-      getFellows({'program_type': `${type} fellow`, 'program_year': `2017`}, fellows => {
-        ReactDOM.render(fellows.map(renderFellowCard), document.querySelector(`#view-fellows-directory .featured-fellow[data-type='${type}']`));
-      });
-    });
+    renderFellowsOnDirectoryPage();
   }
 
   // Fellows on individual Directory page (e.g., science directory, open web directory)
   if (document.querySelector(`#fellows-directory-fellows-by-type`)) {
-    let type = document.querySelector(`#fellows-directory-fellows-by-type`).dataset.type;
-    let fellowsByYear = {};
-
-    getFellows({'program_type': `${type} fellow`}, fellows => {
-
-      fellows.forEach(fellow => {
-        let year = fellow.program_year;
-
-        if (!year) {
-          return;
-        }
-
-        if (!fellowsByYear[year]) {
-          fellowsByYear[year] = [fellow];
-        } else {
-          fellowsByYear[year].push(fellow);
-        }
-      });
-
-      let yearSections = Object.keys(fellowsByYear).sort().reverse().map(year => {
-        return <div className="row mb-5" key={year}>
-          <div className="col-12">
-            <div className="mb-4">
-              <h2 className="h2-typeaccents-gray">{year}</h2>
-            </div>
-          </div>
-          {fellowsByYear[year].map(renderFellowCard)}
-        </div>;
-      });
-
-      ReactDOM.render(yearSections, document.querySelector(`#fellows-directory-fellows-by-type`));
-    });
+    renderFellowsOnDirectoryByTypePage();
   }
 }
 
