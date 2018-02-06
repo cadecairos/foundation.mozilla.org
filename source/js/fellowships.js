@@ -77,7 +77,7 @@ function renderFellowsOnDirectoryPage() {
     return <button
       className="btn btn-link text-capitalize"
       key={option}
-      onClick={(event) => { document.getElementById(event.target.dataset.targetId).scrollIntoView(true); }}
+      onClick={(event) => { window.scrollTo(0, document.getElementById(event.target.dataset.targetId).offsetTop); }}
       data-target-id={`fellowships-directory-${getTypeSlug(option)}`}
     >
       {`${option}${option === `senior` ? ` Fellow` :``}`}
