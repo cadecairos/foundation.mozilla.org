@@ -61,8 +61,8 @@ pipeline {
 
             steps {
                 echo 'planning dev...'
-                s3Download file: ${DEV_APP_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
-                s3Download file: ${DEV_INFRA_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
+                s3Download file: "${DEV_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${PROJECT_S3_PATH}", force: true
+                s3Download file: "${DEV_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${PROJECT_S3_PATH}", force: true
                 sh '''
                    cd ops
                    terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${DEV_STATE_KEY}' -backend-config='${S3_REGION}'
@@ -105,8 +105,8 @@ pipeline {
 
             steps {
                 echo 'planning staging...'
-                s3Download file: ${STAGING_APP_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
-                s3Download file: ${STAGING_INFRA_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
+                s3Download file: "${STAGING_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${PROJECT_S3_PATH}", force: true
+                s3Download file: "${STAGING_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${PROJECT_S3_PATH}", force: true
                 sh '''
                    cd ops
                    terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${STAGING_STATE_KEY}' -backend-config='${S3_REGION}'
@@ -161,8 +161,8 @@ pipeline {
 
             steps {
                 echo 'planning production...'
-                s3Download file: ${PRODUCTION_APP_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
-                s3Download file: ${PRODUCTION_INFRA_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
+                s3Download file: "${PRODUCTION_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${PROJECT_S3_PATH}", force: true
+                s3Download file: "${PRODUCTION_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${PROJECT_S3_PATH}", force: true
                 sh '''
                    cd ops
                    terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${PRODUCTION_STATE_KEY}' -backend-config='${S3_REGION}'
