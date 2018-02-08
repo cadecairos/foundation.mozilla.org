@@ -1,5 +1,5 @@
 provider "heroku" {
-  email = "devops@mozillafoundation.org"
+  email   = "devops@mozillafoundation.org"
   api_key = "${var.heroku_api_key}"
 }
 
@@ -21,18 +21,18 @@ resource "heroku_app" "django_server" {
     DEBUG                             = "${var.debug}"
 
     # Social Sign-in
-    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY     = "${var.social_auth_google_oauth2_key}"
-    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET  = "${var.social_auth_google_oauth2_secret}"
-    SOCIAL_AUTH_LOGIN_REDIRECT_URL    = "${var.social_auth_login_redirect_url}"
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    = "${var.social_auth_google_oauth2_key}"
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "${var.social_auth_google_oauth2_secret}"
+    SOCIAL_AUTH_LOGIN_REDIRECT_URL   = "${var.social_auth_login_redirect_url}"
 
     # Asset uploads
-    FILEBROWSER_DIRECTORY    = "${var.filebrowser_directory}"
-    USE_S3                   = "${var.use_s3}"
-    AWS_ACCESS_KEY_ID        = "${var.aws_access_key_id}"
-    AWS_SECRET_ACCESS_KEY    = "${var.aws_secret_access_key}"
-    AWS_LOCATION             = "${var.aws_location}"
-    AWS_S3_CUSTOM_DOMAIN     = "${var.aws_s3_custom_domain}"
-    AWS_STORAGE_BUCKET_NAME  = "${var.aws_storage_bucket_name}"
+    FILEBROWSER_DIRECTORY   = "${var.filebrowser_directory}"
+    USE_S3                  = "${var.use_s3}"
+    AWS_ACCESS_KEY_ID       = "${var.aws_access_key_id}"
+    AWS_SECRET_ACCESS_KEY   = "${var.aws_secret_access_key}"
+    AWS_LOCATION            = "${var.aws_location}"
+    AWS_S3_CUSTOM_DOMAIN    = "${var.aws_s3_custom_domain}"
+    AWS_STORAGE_BUCKET_NAME = "${var.aws_storage_bucket_name}"
 
     # Petition message queue
     PETITION_SQS_QUEUE_URL    = "${var.petition_sqs_queue_url}"
@@ -62,12 +62,12 @@ resource "heroku_app" "django_server" {
 
   buildpacks = [
     "heroku/nodejs",
-    "heroku_python"
+    "heroku_python",
   ]
 
   organization {
-    name = "${var.org_name}"
-    locked = "${var.locked}"
+    name     = "${var.org_name}"
+    locked   = "${var.locked}"
     personal = "${var.personal}"
   }
 }
