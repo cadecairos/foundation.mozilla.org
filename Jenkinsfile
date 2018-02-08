@@ -62,8 +62,10 @@ pipeline {
 
             steps {
                 echo 'planning dev...'
-                s3Download file: "${DEV_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_APP_CONFIG_FILE}", force: true
-                s3Download file: "${DEV_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_INFRA_CONFIG_FILE}", force: true
+                withAWS {
+                    s3Download file: "${DEV_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_APP_CONFIG_FILE}", force: true
+                    s3Download file: "${DEV_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_INFRA_CONFIG_FILE}", force: true
+                }
                 sh '''
                    cd ops
                    terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${DEV_STATE_KEY}' -backend-config='${S3_REGION}'
