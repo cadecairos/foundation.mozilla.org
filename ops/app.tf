@@ -1,3 +1,8 @@
+provider "heroku" {
+  email = "devops@mozillafoundation.org"
+  api_key = "${var.heroku_api_key}"
+}
+
 resource "heroku_app" "django_server" {
   name   = "${var.app_name}"
   region = "${var.region}"
@@ -5,9 +10,9 @@ resource "heroku_app" "django_server" {
 
   config_vars {
     # Django Configuration settings
-    ALLOWED_HOSTS                     = "${join(',', var.allowed_hosts)}"
+    ALLOWED_HOSTS                     = "${join(",", var.allowed_hosts)}"
     CONTENT_TYPE_NO_SNIFF             = "${var.content_type_no_sniff}"
-    CORS_WHITELIST                    = "${join(',', var.domain_name)}"
+    CORS_WHITELIST                    = "${join(",", var.domain_name)}"
     DJANGO_SECRET_KEY                 = "${var.django_secret_key}"
     DJANGO_LOG_LEVEL                  = "${var.django_log_level}"
     DOMAIN_REDIRECT_MIDDLWARE_ENABLED = "${var.domain_redirect_middlware_enabled}"
@@ -21,13 +26,13 @@ resource "heroku_app" "django_server" {
     SOCIAL_AUTH_LOGIN_REDIRECT_URL    = "${var.social_auth_login_redirect_url}"
 
     # Asset uploads
-    FILEBROWSER_DIRECTORY    = "${var.FILEBROWSER_DIRECTORY}"
-    USE_S3                   = "${var.USE_S3}"
-    AWS_ACCESS_KEY_ID        = "${var.AWS_ACCESS_KEY}"
-    AWS_SECRET_ACCESS_KEY    = "${var.AWS_SECRET_ACCESS_KEY}"
-    AWS_LOCATION             = "${var.AWS_LOCATION}"
-    AWS_S3_CUSTOM_DOMAIN     = "${var.AWS_S3_CUSTOM_DOMAIN}"
-    AWS_STORAGE_BUCKET_NAME  = "${var.AWS_STORAGE_BUCKET_NAME}"
+    FILEBROWSER_DIRECTORY    = "${var.filebrowser_directory}"
+    USE_S3                   = "${var.use_s3}"
+    AWS_ACCESS_KEY_ID        = "${var.aws_access_key_id}"
+    AWS_SECRET_ACCESS_KEY    = "${var.aws_secret_access_key}"
+    AWS_LOCATION             = "${var.aws_location}"
+    AWS_S3_CUSTOM_DOMAIN     = "${var.aws_s3_custom_domain}"
+    AWS_STORAGE_BUCKET_NAME  = "${var.aws_storage_bucket_name}"
 
     # Petition message queue
     PETITION_SQS_QUEUE_URL    = "${var.petition_sqs_queue_url}"
@@ -74,5 +79,5 @@ resource "heroku_addon" "django_server" {
 
 resource "heroku_domain" "django_server" {
   app      = "${var.app_name}"
-  hostname = "foundation.mofodev.net"
+  hostname = "${var.domain_name}"
 }
