@@ -39,7 +39,7 @@ pipeline {
     stages {
         stage('Init') {
             when {
-                branch: 'terraform'
+                branch 'terraform'
             }
             steps {
                 echo 'running init....'
@@ -51,7 +51,7 @@ pipeline {
 
         stage('Plan - dev') {
             when {
-                branch: 'terraform'
+                branch 'terraform'
                 environment name: 'DEPLOY_TO', value: 'dev'
             }
 
@@ -68,7 +68,7 @@ pipeline {
 
         stage('Deploy - Dev') {
             when {
-                branch: 'terraform'
+                branch 'terraform'
                 environment name: 'DEPLOY_TO', value: 'dev'
             }
 
@@ -84,7 +84,7 @@ pipeline {
 
         stage('Plan - Staging') {
             when {
-                branch: 'terraform'
+                branch 'terraform'
                 environment name: 'DEPLOY_TO', value: 'staging'
             }
 
@@ -100,7 +100,7 @@ pipeline {
 
         stage('Deploy - Staging') {
             when {
-                branch: 'terraform'
+                branch 'terraform'
                 environment name: 'DEPLOY_TO', value: 'staging'
             }
 
@@ -116,7 +116,7 @@ pipeline {
 
         stage('Promote to Production') {
             when {
-                branch: 'terraform'
+                branch 'terraform'
                 environment name: 'DEPLOY_TO', value: 'staging'
             }
             steps {
@@ -128,7 +128,7 @@ pipeline {
 
         stage('plan - production') {
             when {
-                branch: 'terraform'
+                branch 'terraform'
                 environment name: 'DEPLOY_TO', value: 'staging'
             }
 
@@ -144,7 +144,7 @@ pipeline {
 
         stage('Deploy - Production') {
             when {
-                branch: 'terraform'
+                branch 'terraform'
                 environment name: 'DEPLOY_TO', value: 'staging'
             }
 
