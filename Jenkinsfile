@@ -34,9 +34,7 @@ pipeline {
         STAGING_PLAN    = 'staging.tfplan'
         PRODUCTION_PLAN = 'production.tfplan'
 
-        DEV_DEPLOY_URL        = "https://git.heroku.com/foundation-mofodev-net.git"
-        STAGING_DEPLOY_URL    = "https://git.heroku.com/foundation-mofostaging-net.git"
-        PRODUCTION_DEPLOY_URL = "https://git.heroku.com/foundation-mozilla-org.git"
+        HEROKU_GIT_HOST = "https://git.heroku.com/"
 
         HEROKU_DEPLOY_CREDENTIALS = 'heroku-deploy-key'
     }
@@ -89,10 +87,13 @@ pipeline {
                 echo 'Deploying Dev...'
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$STAGING_STATE_KEY' -backend-config='$S3_REGION'
-                   terraform apply -lock=false -input=false $STAGING_PLAN
+                   terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$DEV_STATE_KEY' -backend-config='$S3_REGION'
+                   terraform apply -lock=false -input=false $DEV_PLAN
+
+                   # grab the app name from the config file
+                   HEROKU_APP=$(grep app_name $DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\s\|"//g')
                    '''
-                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$DEV_DEPLOY_URL'
+                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
             }
         }
 
@@ -132,8 +133,11 @@ pipeline {
                    cd ops
                    terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$STAGING_STATE_KEY' -backend-config='$S3_REGION'
                    terraform apply -lock=false -input=false $STAGING_PLAN
+
+                   # grab the app name from the config file
+                   HEROKU_APP=$(grep app_name $STAGING_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\s\|"//g')
                    '''
-                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$STAGING_DEPLOY_URL'
+                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
             }
         }
 
@@ -185,8 +189,11 @@ pipeline {
                    cd ops
                    terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$PRODUCTION_STATE_KEY' -backend-config='$S3_REGION'
                    terraform apply -lock=false -input=false $PRODUCTION_PLAN
+
+                   # grab the app name from the config file
+                   HEROKU_APP=$(grep app_name $PRODUCTION_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\s\|"//g')
                    '''
-                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$PRODUCTION_DEPLOY_URL'
+                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
             }
         }
     }
