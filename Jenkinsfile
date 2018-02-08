@@ -12,12 +12,12 @@ pipeline {
         HEROKU_API_KEY        = credentials('terraform-heroku-api-key')
 
         S3_BUCKET = 'bucket=mofo-terraform'
-        S3_PATH   = 'foundation.mozilla.org'
+        S3_PATH   = 'foundation.mozilla.org/'
         S3_REGION = 'region=us-east-1'
 
-        DEV_APP_CONFIG_FILE        = 'dev.tfvars'
-        STAGING_APP_CONFIG_FILE    = 'staging.tfvars'
-        PRODUCTION_APP_CONFIG_FILE = 'dev.tfvars'
+        DEV_APP_CONFIG_FILE        = 'dev.app.tfvars'
+        STAGING_APP_CONFIG_FILE    = 'staging.app.tfvars'
+        PRODUCTION_APP_CONFIG_FILE = 'dev.app.tfvars'
 
         DEV_INFRA_CONFIG_FILE        = 'dev.infrastructure.tfvars'
         STAGING_INFRA_CONFIG_FILE    = 'staging.infrastructure.tfvars'
@@ -62,8 +62,8 @@ pipeline {
 
             steps {
                 echo 'planning dev...'
-                s3Download file: "${DEV_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}", force: true
-                s3Download file: "${DEV_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}", force: true
+                s3Download file: "${DEV_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_APP_CONFIG_FILE}", force: true
+                s3Download file: "${DEV_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_INFRA_CONFIG_FILE}", force: true
                 sh '''
                    cd ops
                    terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${DEV_STATE_KEY}' -backend-config='${S3_REGION}'
@@ -106,8 +106,8 @@ pipeline {
 
             steps {
                 echo 'planning staging...'
-                s3Download file: "${STAGING_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}", force: true
-                s3Download file: "${STAGING_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}", force: true
+                s3Download file: "${STAGING_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${STAGING_APP_CONFIG_FILE}", force: true
+                s3Download file: "${STAGING_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${PRODUCTION_INFRA_CONFIG_FILE}", force: true
                 sh '''
                    cd ops
                    terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${STAGING_STATE_KEY}' -backend-config='${S3_REGION}'
@@ -162,8 +162,8 @@ pipeline {
 
             steps {
                 echo 'planning production...'
-                s3Download file: "${PRODUCTION_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}", force: true
-                s3Download file: "${PRODUCTION_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}", force: true
+                s3Download file: "${PRODUCTION_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${PRODUCTION_APP_CONFIG_FILE}", force: true
+                s3Download file: "${PRODUCTION_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${PRODUCTION_INFRA_CONFIG_FILE}", force: true
                 sh '''
                    cd ops
                    terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${PRODUCTION_STATE_KEY}' -backend-config='${S3_REGION}'
