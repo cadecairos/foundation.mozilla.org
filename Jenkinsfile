@@ -7,9 +7,12 @@ pipeline {
     }
 
     environment {
+        AWS_ACCESS_KEY_ID            = credentials('jenkins-terraform-secret-key-id')
+        AWS_SECRET_ACCESS_KEY        = credentials('jenkins-terraform-secret-access-key')
+        HEROKU_API_KEY               = credentials('terraform-heroku-api-key')
+
         TERRAFORM_S3_CREDENTIALS_ID  = 'terraform-aws-credentials'
         HEROKU_DEPLOY_CREDENTIALS_ID = 'heroku-deploy-key'
-        HEROKU_API_KEY               = credentials('terraform-heroku-api-key')
 
         S3_BUCKET = 'bucket=mofo-terraform'
         S3_PATH   = 'foundation-mozilla-org/'
