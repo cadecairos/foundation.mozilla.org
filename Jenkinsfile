@@ -12,7 +12,7 @@ pipeline {
         HEROKU_API_KEY        = credentials('terraform-heroku-api-key')
 
         S3_BUCKET = 'bucket=mofo-terraform'
-        S3_PATH   = 'foundation.mozilla.org/'
+        S3_PATH   = 'foundation-mozilla-org/'
         S3_REGION = 'region=us-east-1'
 
         DEV_APP_CONFIG_FILE        = 'dev.app.tfvars'
