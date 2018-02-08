@@ -61,17 +61,17 @@ pipeline {
 
             steps {
                 echo 'planning dev...'
-                s3Download file: $DEV_APP_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
-                s3Download file: $DEV_INFRA_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
+                s3Download file: ${DEV_APP_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
+                s3Download file: ${DEV_INFRA_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$DEV_STATE_KEY' -backend-config='$S3_REGION'
+                   terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${DEV_STATE_KEY}' -backend-config='${S3_REGION}'
                    terraform plan \
-                       --resource='$DEV_RESOURCE' \
-                       -out='$DEV_PLAN' \
-                       -var-file='$DEV_APP_CONFIG_FILE' \
-                       -var-file='$DEV_INFRA_CONFIG_FILE' \
-                       -var='heroku_api_key=$HEROKU_API_KEY' \
+                       --resource='${DEV_RESOURCE}' \
+                       -out='${DEV_PLAN}' \
+                       -var-file='${DEV_APP_CONFIG_FILE}' \
+                       -var-file='${DEV_INFRA_CONFIG_FILE}' \
+                       -var='heroku_api_key=${HEROKU_API_KEY}' \
                        -input=false
                    '''
             }
@@ -87,13 +87,13 @@ pipeline {
                 echo 'Deploying Dev...'
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$DEV_STATE_KEY' -backend-config='$S3_REGION'
-                   terraform apply -lock=false -input=false $DEV_PLAN
+                   terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${DEV_STATE_KEY}' -backend-config='${S3_REGION}'
+                   terraform apply -lock=false -input=false ${DEV_PLAN}
 
                    # grab the app name from the config file
-                   HEROKU_APP=$(grep app_name $DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
+                   HEROKU_APP=$(grep app_name ${DEV_INFRA_CONFIG_FILE} | cut -f2 -d = | sed 's/\\s\\|"//g')
                    '''
-                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
+                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '${HEROKU_DEPLOY_CREDENTIALS}', url: '${HEROKU_GIT_HOST}/${HEROKU_APP}.git'
             }
         }
 
@@ -105,17 +105,17 @@ pipeline {
 
             steps {
                 echo 'planning staging...'
-                s3Download file: $STAGING_APP_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
-                s3Download file: $STAGING_INFRA_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
+                s3Download file: ${STAGING_APP_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
+                s3Download file: ${STAGING_INFRA_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$STAGING_STATE_KEY' -backend-config='$S3_REGION'
+                   terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${STAGING_STATE_KEY}' -backend-config='${S3_REGION}'
                    terraform plan \
-                       --resource='$DEV_RESOURCE' \
-                       -out='$STAGING_PLAN' \
-                       -var-file='$STAGING_APP_CONFIG_FILE' \
-                       -var-file='$STAGING_INFRA_CONFIG_FILE' \
-                       -var='heroku_api_key=$HEROKU_API_KEY' \
+                       --resource='${DEV_RESOURCE}' \
+                       -out='${STAGING_PLAN}' \
+                       -var-file='${STAGING_APP_CONFIG_FILE}' \
+                       -var-file='${STAGING_INFRA_CONFIG_FILE}' \
+                       -var='heroku_api_key=${HEROKU_API_KEY}' \
                        -input=false
                    '''
             }
@@ -131,13 +131,13 @@ pipeline {
                 echo 'Deploying...'
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$STAGING_STATE_KEY' -backend-config='$S3_REGION'
-                   terraform apply -lock=false -input=false $STAGING_PLAN
+                   terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${STAGING_STATE_KEY}' -backend-config='${S3_REGION}'
+                   terraform apply -lock=false -input=false ${STAGING_PLAN}
 
                    # grab the app name from the config file
-                   HEROKU_APP=$(grep app_name $STAGING_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
+                   HEROKU_APP=$(grep app_name ${STAGING_INFRA_CONFIG_FILE} | cut -f2 -d = | sed 's/\\s\\|"//g')
                    '''
-                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
+                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '${HEROKU_DEPLOY_CREDENTIALS}', url: '${HEROKU_GIT_HOST}/${HEROKU_APP}.git'
             }
         }
 
@@ -161,17 +161,17 @@ pipeline {
 
             steps {
                 echo 'planning production...'
-                s3Download file: $PRODUCTION_APP_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
-                s3Download file: $PRODUCTION_INFRA_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
+                s3Download file: ${PRODUCTION_APP_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
+                s3Download file: ${PRODUCTION_INFRA_CONFIG_FILE}, bucket: ${S3_BUCKET}, path: ${PROJECT_S3_PATH}, force: true
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$PRODUCTION_STATE_KEY' -backend-config='$S3_REGION'
+                   terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${PRODUCTION_STATE_KEY}' -backend-config='${S3_REGION}'
                    terraform plan \
-                       --resource='$DEV_RESOURCE' \
-                       -out='$PRODUCTION_PLAN' \
-                       -var-file='$PRODUCTION_APP_CONFIG_FILE' \
-                       -var-file='$PRODUCTION_INFRA_CONFIG_FILE' \
-                       -var='heroku_api_key=$HEROKU_API_KEY' \
+                       --resource='${DEV_RESOURCE}' \
+                       -out='${PRODUCTION_PLAN}' \
+                       -var-file='${PRODUCTION_APP_CONFIG_FILE}' \
+                       -var-file='${PRODUCTION_INFRA_CONFIG_FILE}' \
+                       -var='heroku_api_key=${HEROKU_API_KEY}' \
                        -input=false
                    '''
             }
@@ -187,13 +187,13 @@ pipeline {
                 echo 'Deploying production....'
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$PRODUCTION_STATE_KEY' -backend-config='$S3_REGION'
-                   terraform apply -lock=false -input=false $PRODUCTION_PLAN
+                   terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${PRODUCTION_STATE_KEY}' -backend-config='${S3_REGION}'
+                   terraform apply -lock=false -input=false ${PRODUCTION_PLAN}
 
                    # grab the app name from the config file
-                   HEROKU_APP=$(grep app_name $PRODUCTION_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
+                   HEROKU_APP=$(grep app_name ${PRODUCTION_INFRA_CONFIG_FILE} | cut -f2 -d = | sed 's/\\s\\|"//g')
                    '''
-                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
+                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '${HEROKU_DEPLOY_CREDENTIALS}', url: '${HEROKU_GIT_HOST}/$HEROKU_APP.git'
             }
         }
     }
