@@ -44,6 +44,7 @@ pipeline {
             steps {
                 echo 'running init....'
                 sh '''
+                   cd ops
                    terraform init -input=false
                    '''
             }
@@ -59,6 +60,7 @@ pipeline {
                 echo 'planning dev...'
                 s3Download file: $DEV_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
                 sh '''
+                   cd ops
                    terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$DEV_STATE_KEY' -backend-config='$S3_REGION'
                    terraform plan --resource='$DEV_RESOURCE' -out='$DEV_PLAN' -var-file='$DEV_CONFIG_FILE' -input=false
                    git
@@ -75,6 +77,7 @@ pipeline {
             steps {
                 echo 'Deploying Dev...'
                 sh '''
+                   cd ops
                    terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$STAGING_STATE_KEY' -backend-config='$S3_REGION'
                    terraform apply -lock=false -input=false $STAGING_PLAN
                    '''
@@ -92,6 +95,7 @@ pipeline {
                 echo 'planning staging...'
                 s3Download file: $STAGING_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
                 sh '''
+                   cd ops
                    terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$STAGING_STATE_KEY' -backend-config='$S3_REGION'
                    terraform plan --resource='$DEV_RESOURCE' -out='$STAGING_PLAN' -var-file='$STAGING_CONFIG_FILE' -input=false
                    '''
@@ -107,6 +111,7 @@ pipeline {
             steps {
                 echo 'Deploying...'
                 sh '''
+                   cd ops
                    terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$STAGING_STATE_KEY' -backend-config='$S3_REGION'
                    terraform apply -lock=false -input=false $STAGING_PLAN
                    '''
@@ -136,6 +141,7 @@ pipeline {
                 echo 'planning production...'
                 s3Download file: $PRODUCTION_CONFIG_FILE, bucket: $S3_BUCKET, path: $PROJECT_S3_PATH, force: true
                 sh '''
+                   cd ops
                    terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$PRODUCTION_STATE_KEY' -backend-config='$S3_REGION'
                    terraform plan --resource='$DEV_RESOURCE' -out='$PRODUCTION_PLAN' -var-file='$PRODUCTION_CONFIG_FILE' -input=false
                    '''
@@ -151,6 +157,7 @@ pipeline {
             steps {
                 echo 'Deploying production....'
                 sh '''
+                   cd ops
                    terraform remote config -backend=S3 -backend-config='$S3_BUCKET' -backend-config='$PRODUCTION_STATE_KEY' -backend-config='$S3_REGION'
                    terraform apply -lock=false -input=false $PRODUCTION_PLAN
                    '''
