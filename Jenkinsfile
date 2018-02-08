@@ -91,7 +91,7 @@ pipeline {
                    terraform apply -lock=false -input=false $DEV_PLAN
 
                    # grab the app name from the config file
-                   HEROKU_APP=$(grep app_name $DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\s\|"//g')
+                   HEROKU_APP=$(grep app_name $DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
                    '''
                 gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
             }
@@ -135,7 +135,7 @@ pipeline {
                    terraform apply -lock=false -input=false $STAGING_PLAN
 
                    # grab the app name from the config file
-                   HEROKU_APP=$(grep app_name $STAGING_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\s\|"//g')
+                   HEROKU_APP=$(grep app_name $STAGING_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
                    '''
                 gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
             }
@@ -191,7 +191,7 @@ pipeline {
                    terraform apply -lock=false -input=false $PRODUCTION_PLAN
 
                    # grab the app name from the config file
-                   HEROKU_APP=$(grep app_name $PRODUCTION_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\\s\\\|"//g')
+                   HEROKU_APP=$(grep app_name $PRODUCTION_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
                    '''
                 gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
             }
