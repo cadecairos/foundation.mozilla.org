@@ -100,8 +100,7 @@ pipeline {
                    '''
                 sshagent(['${HEROKU_DEPLOY_CREDENTIALS_ID}']) {
                     sh '''
-                       $(grep 'app_name ops/$DEV_INFRA_CONFIG_FILE' | cut -f2 -d = | sed 's/\\s\\|"//g')
-                       git push $HEROKU_GIT_HOST/$HEROKU_APP.git master:master"
+                       git push $HEROKU_GIT_HOST/$(grep app_name ops/$DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g').git master:master"
                        '''
                 }
             }
