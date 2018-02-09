@@ -71,8 +71,7 @@ pipeline {
                 }
                 sh '''
                    cd ops
-                   terraform workspace new dev
-                   terraform state pull
+                   terraform workspace select dev
                    terraform plan \
                        -input=false \
                        -var-file=$DEV_APP_CONFIG_FILE \
