@@ -70,7 +70,8 @@ pipeline {
                 }
                 sh '''
                    cd ops
-                   terraform workspace select dev
+                   terraform workspace new dev
+                   terraform state pull
                    terraform plan \
                        --resource=$DEV_RESOURCE \
                        -out=$DEV_PLAN \
