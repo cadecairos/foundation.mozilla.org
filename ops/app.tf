@@ -76,7 +76,7 @@ resource "heroku_app" "django_server" {
 
   buildpacks = [
     "heroku/nodejs",
-    "heroku_python",
+    "heroku/python",
   ]
 
   organization {
