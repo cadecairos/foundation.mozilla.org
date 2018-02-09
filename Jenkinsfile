@@ -26,10 +26,6 @@ pipeline {
         STAGING_INFRA_CONFIG_FILE    = 'staging.infrastructure.tfvars'
         PRODUCTION_INFRA_CONFIG_FILE = 'dev.infrastructure.tfvars'
 
-        DEV_TARGET        = 'foundation/dev'
-        STAGING_TARGET    = 'foundation/staging'
-        PRODUCTION_TARGET = 'foundation/production'
-
         DEV_STATE_KEY        = 'key=foundation-mozilla-org/dev.tfstate'
         STAGING_STATE_KEY    = 'key=foundation-mozilla-org/staging.tfstate'
         PRODUCTION_STATE_KEY = 'key=foundation-mozilla-org/production.tfstate'
@@ -74,7 +70,6 @@ pipeline {
                    terraform state pull
                    terraform plan \
                        -input=false \
-                       -target=$DEV_TARGET \
                        -var='heroku_api_key=$HEROKU_API_KEY' \
                        -var='state_access_key=$AWS_ACCESS_KEY_ID' \
                        -var='state_secret_key=$AWS_SECRET_ACCESS_KEY' \
@@ -125,7 +120,6 @@ pipeline {
                    cd ops
                    terraform workspace select staging
                    terraform plan \
-                       -target='${STAGING_TARGET}' \
                        -out='${STAGING_PLAN}' \
                        -var-file='${STAGING_APP_CONFIG_FILE}' \
                        -var-file='${STAGING_INFRA_CONFIG_FILE}' \
@@ -183,7 +177,6 @@ pipeline {
                    cd ops
                    terraform workspace select staging
                    terraform plan \
-                       -target='${PRODUCTION_TARGET}' \
                        -out='${PRODUCTION_PLAN}' \
                        -var-file='${PRODUCTION_APP_CONFIG_FILE}' \
                        -var-file='${PRODUCTION_INFRA_CONFIG_FILE}' \
