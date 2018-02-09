@@ -65,8 +65,8 @@ pipeline {
             steps {
                 echo 'planning dev...'
                 withAWS(credentials: "${TERRAFORM_S3_CREDENTIALS_ID}", region: 'us-east-1') {
-                    s3Download file: "${DEV_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_APP_CONFIG_FILE}", force: true
-                    s3Download file: "${DEV_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_INFRA_CONFIG_FILE}", force: true
+                    s3Download file: "${DEV_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_APP_CONFIG_FILE}", force: true, pathStyleAccessEnabled: true
+                    s3Download file: "${DEV_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_INFRA_CONFIG_FILE}", force: true, pathStyleAccessEnabled: true
                 }
                 sh '''
                    cd ops
