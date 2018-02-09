@@ -18,7 +18,7 @@ pipeline {
         S3_PATH   = 'foundation-mozilla-org/'
         S3_REGION = 'region=us-east-1'
 
-        STATE_CONFIG = 'state.tfvars'
+        STATE_CONFIG_FILE = 'state.tfvars'
 
         DEV_APP_CONFIG_FILE        = 'dev.app.tfvars'
         STAGING_APP_CONFIG_FILE    = 'staging.app.tfvars'
@@ -48,11 +48,11 @@ pipeline {
             steps {
                 echo 'running init....'
                 withAWS(credentials: "${TERRAFORM_S3_CREDENTIALS_ID}", region: 'us-east-1') {
-                    s3Download file: "ops/${STATE_CONFIG}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${STATE_CONFIG}", force: true
+                    s3Download file: "ops/${STATE_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${STATE_CONFIG_FILE}", force: true
                 }
                 sh '''
                    cd ops
-                   terraform init -input=false -backend-config=$STATE_CONFIG
+                   terraform init -input=false -backend-config=$STATE_CONFIG_FILE
                    '''
             }
         }
@@ -78,6 +78,7 @@ pipeline {
                        -var='heroku_api_key=$HEROKU_API_KEY' \
                        -var-file=$DEV_APP_CONFIG_FILE \
                        -var-file=$DEV_INFRA_CONFIG_FILE \
+                       -var-file=STATE_CONFIG_FILE \
                        -out=$DEV_PLAN
                    '''
             }
