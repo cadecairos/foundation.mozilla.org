@@ -97,12 +97,12 @@ pipeline {
                        -lock=false \
                        -input=false \
                        $DEV_PLAN
-
-                   # grab the app name from the config file
-                   HEROKU_APP=$(grep app_name $DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
                    '''
                 sshagent(['${HEROKU_DEPLOY_CREDENTIALS_ID}']) {
-                    sh "git push $HEROKU_GIT_HOST/$HEROKU_APP.git master:master"
+                    sh '''
+                       $(grep app_name ops/$DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
+                       git push $HEROKU_GIT_HOST/$HEROKU_APP.git master:master"
+                       '''
                 }
             }
         }
