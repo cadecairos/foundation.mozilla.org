@@ -35,7 +35,7 @@ pipeline {
         STAGING_PLAN    = 'staging.tfplan'
         PRODUCTION_PLAN = 'production.tfplan'
 
-        HEROKU_GIT_HOST = "https://git.heroku.com/"
+        HEROKU_GIT_HOST = "https://git.heroku.com"
 
     }
 
@@ -99,10 +99,7 @@ pipeline {
                        $DEV_PLAN
                    '''
                 sshagent(['${HEROKU_DEPLOY_CREDENTIALS_ID}']) {
-                    sh '''
-                       HEROKU_APP=$(grep app_name ops/$DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed \'s/\\s\\|\"//g\')
-                       git push $HEROKU_GIT_HOST/$HEROKU_APP.git master:master
-                       '''
+                    sh 'git push $(terraform output heroku_app.django_app.git_url) master:master'
                 }
             }
         }
