@@ -1,15 +1,5 @@
 terraform {
-  backend "s3" {
-    config {
-      bucket     = "${var.state_s3_bucket}"
-      key        = "${var.state_s3_key}"
-      region     = "${var.state_s3_region}"
-      encrypt    = "${var.state_encrypt}"
-      kms_key_id = "${var.state_kms_key_id}"
-      access_key = "${var.state_access_key}"
-      secret_key = "${var.state_secret_key}"
-    }
-  }
+  backend "s3" {}
 }
 
 provider "heroku" {
