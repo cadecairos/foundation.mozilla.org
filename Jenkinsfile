@@ -80,6 +80,7 @@ pipeline {
                        -var-file=$DEV_INFRA_CONFIG_FILE \
                        -var-file=$STATE_CONFIG_FILE \
                        -out=$DEV_PLAN
+                   # TODO: upload plan to S3?
                    '''
             }
         }
@@ -97,8 +98,6 @@ pipeline {
                    terraform apply \
                        -lock=false \
                        -input=false \
-                       -var='state_access_key=$AWS_ACCESS_KEY_ID' \
-                       -var='state_secret_key=$AWS_SECRET_ACCESS_KEY' \
                        $DEV_PLAN
 
                    # grab the app name from the config file
