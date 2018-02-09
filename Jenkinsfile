@@ -76,7 +76,6 @@ pipeline {
                        -input=false \
                        -var-file=$DEV_APP_CONFIG_FILE \
                        -var-file=$DEV_INFRA_CONFIG_FILE \
-                       -var-file=$STATE_CONFIG_FILE \
                        -out=$DEV_PLAN
                    # TODO: upload plan to S3?
                    '''
