@@ -9,7 +9,6 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID            = credentials('jenkins-terraform-secret-key-id')
         AWS_SECRET_ACCESS_KEY        = credentials('jenkins-terraform-secret-access-key')
-        HEROKU_API_KEY               = credentials('terraform-heroku-api-key')
 
         TERRAFORM_S3_CREDENTIALS_ID  = 'terraform-aws-credentials'
         HEROKU_DEPLOY_CREDENTIALS_ID = 'heroku-deploy-key'
@@ -75,7 +74,6 @@ pipeline {
                    terraform state pull
                    terraform plan \
                        -input=false \
-                       -var='heroku_api_key=$HEROKU_API_KEY' \
                        -var-file=$DEV_APP_CONFIG_FILE \
                        -var-file=$DEV_INFRA_CONFIG_FILE \
                        -var-file=$STATE_CONFIG_FILE \
