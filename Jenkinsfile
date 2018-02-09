@@ -70,7 +70,7 @@ pipeline {
                 }
                 sh '''
                    cd ops
-                   terraform workspace select dev
+                   terraform workspace new dev
                    terraform state pull
                    terraform plan \
                        -input=false \
