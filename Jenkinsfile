@@ -49,7 +49,6 @@ pipeline {
                 echo 'running init....'
                 withAWS(credentials: "${TERRAFORM_S3_CREDENTIALS_ID}", region: 'us-east-1') {
                     s3Download file: "ops/${STATE_CONFIG}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${STATE_CONFIG}", force: true
-                    s3Download file: "ops/${STATE_CONFIG}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${STATE_CONFIG}", force: true
                 }
                 sh '''
                    cd ops
