@@ -87,11 +87,13 @@ resource "heroku_app" "django_server" {
 }
 
 resource "heroku_addon" "django_server" {
-  app  = "${var.app_name}"
-  plan = "heroku-postgresql:hobby-basic"
+  app        = "${var.app_name}"
+  plan       = "heroku-postgresql:hobby-basic"
+  depends_on = ["heroku_app.django_server"]
 }
 
 resource "heroku_domain" "django_server" {
-  app      = "${var.app_name}"
-  hostname = "${var.domain_name}"
+  app        = "${var.app_name}"
+  hostname   = "${var.domain_name}"
+  depends_on = ["heroku_app.django_server"]
 }
