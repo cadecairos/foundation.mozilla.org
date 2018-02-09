@@ -1,21 +1,22 @@
+terraform {
+  backend "s3" {
+    config {
+      bucket     = "${var.state_s3_bucket}"
+      key        = "${var.state_s3_key}"
+      region     = "${var.state_s3_region}"
+      encrypt    = "${var.state_encrypt}"
+      kms_key_id = "${var.state_kms_key_id}"
+      access_key = "${var.state_access_key}"
+      secret_key = "${var.state_secret_key}"
+    }
+  }
+}
+
 provider "heroku" {
   email   = "devops@mozillafoundation.org"
   api_key = "${var.heroku_api_key}"
 }
 
-data "terraform_remote_state" "s3" {
-  backend = "s3"
-
-  config {
-    bucket     = "${var.state_s3_bucket}"
-    key        = "${var.state_s3_key}"
-    region     = "${var.state_s3_region}"
-    encrypt    = "${var.state_encrypt}"
-    kms_key_id = "${var.state_kms_key_id}"
-    access_key = "${var.state_access_key}"
-    secret_key = "${var.state_secret_key}"
-  }
-}
 
 resource "heroku_app" "django_server" {
   name   = "${var.app_name}"
