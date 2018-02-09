@@ -57,16 +57,19 @@ variable "debug" {
 
 variable "social_auth_google_oauth2_key" {
   type        = "string"
+  default     = ""
   description = "OAuth2 key for social sign in"
 }
 
 variable "social_auth_google_oauth2_secret" {
   type        = "string"
+  default     = ""
   description = "OAuth2 secret key for social sign in"
 }
 
 variable "social_auth_login_redirect_url" {
   type        = "string"
+  default     = ""
   description = "The redirect URL configured for the OAuth application in Google"
 }
 
@@ -78,51 +81,61 @@ variable "filebrowser_directory" {
 
 variable "use_s3" {
   type        = "string"
+  default     = "false"
   description = "Store uploaded media on S3"
 }
 
 variable "aws_access_key_id" {
   type        = "string"
+  default     = ""
   description = "AWS Key with read/write permissions for the S3 uploads bucket"
 }
 
 variable "aws_secret_access_key" {
   type        = "string"
+  default     = ""
   description = "AWS Secret Key with read/write permissions for the S3 uploads bucket"
 }
 
 variable "aws_location" {
   type        = "string"
+  default     = ""
   description = "S3 Bucket prefix for media uploads"
 }
 
 variable "aws_s3_custom_domain" {
   type        = "string"
+  default     = ""
   description = "Custom domain for S3 bucket"
 }
 
 variable "aws_storage_bucket_name" {
   type        = "string"
+  default     = ""
   description = "S3 Bucket name for media uploads"
 }
 
 variable "petition_sqs_queue_url" {
   type        = "string"
+  default     = ""
   description = "URL of the SQS queue that processes petition signatures"
 }
 
 variable "aws_sqs_access_key_id" {
   type        = "string"
+  default     = ""
   description = "AWS key with write permissions on the petition queue"
 }
 
 variable "aws_sqs_secret_access_key" {
   type        = "string"
+  default     = ""
   description = "AWS secret access key with write permissions on the petition queue"
 }
 
 variable "aws_sqs_region" {
   type        = "string"
+  default     = ""
   description = "AWS region that the SQS queue is in"
 }
 
