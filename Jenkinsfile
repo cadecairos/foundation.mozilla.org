@@ -70,13 +70,13 @@ pipeline {
                 }
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${DEV_STATE_KEY}' -backend-config='${S3_REGION}'
+                   terraform remote config -backend=S3 -backend-config=$S3_BUCKET -backend-config=$DEV_STATE_KEY -backend-config=$S3_REGION
                    terraform plan \
-                       --resource='${DEV_RESOURCE}' \
-                       -out='${DEV_PLAN}' \
-                       -var-file='${DEV_APP_CONFIG_FILE}' \
-                       -var-file='${DEV_INFRA_CONFIG_FILE}' \
-                       -var='heroku_api_key=${HEROKU_API_KEY}' \
+                       --resource=$DEV_RESOURCE \
+                       -out=$DEV_PLAN \
+                       -var-file=$DEV_APP_CONFIG_FILE \
+                       -var-file=$DEV_INFRA_CONFIG_FILE \
+                       -var='heroku_api_key=$HEROKU_API_KEY' \
                        -input=false
                    '''
             }
@@ -92,13 +92,13 @@ pipeline {
                 echo 'Deploying Dev...'
                 sh '''
                    cd ops
-                   terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${DEV_STATE_KEY}' -backend-config='${S3_REGION}'
-                   terraform apply -lock=false -input=false ${DEV_PLAN}
+                   terraform remote config -backend=S3 -backend-config=$S3_BUCKET -backend-config=$DEV_STATE_KEY -backend-config=$S3_REGION
+                   terraform apply -lock=false -input=false $DEV_PLAN
 
                    # grab the app name from the config file
-                   HEROKU_APP=$(grep app_name ${DEV_INFRA_CONFIG_FILE} | cut -f2 -d = | sed 's/\\s\\|"//g')
+                   HEROKU_APP=$(grep app_name $DEV_INFRA_CONFIG_FILE | cut -f2 -d = | sed 's/\\s\\|"//g')
                    '''
-                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '${HEROKU_DEPLOY_CREDENTIALS_ID}', url: '${HEROKU_GIT_HOST}/${HEROKU_APP}.git'
+                gitPublisher branchesToPush: [[branchName: 'master']], credentialsId: '$HEROKU_DEPLOY_CREDENTIALS_ID', url: '$HEROKU_GIT_HOST/$HEROKU_APP.git'
             }
         }
 
