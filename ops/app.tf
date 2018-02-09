@@ -26,7 +26,7 @@ resource "heroku_app" "django_server" {
     # Django Configuration settings
     ALLOWED_HOSTS                     = "${join(",", var.allowed_hosts)}"
     CONTENT_TYPE_NO_SNIFF             = "${var.content_type_no_sniff}"
-    CORS_WHITELIST                    = "${join(",", var.domain_name)}"
+    CORS_WHITELIST                    = "${join(",", var.cors_whitelist)}"
     DJANGO_SECRET_KEY                 = "${var.django_secret_key}"
     DJANGO_LOG_LEVEL                  = "${var.django_log_level}"
     DOMAIN_REDIRECT_MIDDLWARE_ENABLED = "${var.domain_redirect_middlware_enabled}"
