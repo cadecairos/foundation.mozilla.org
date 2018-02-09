@@ -11,10 +11,11 @@ pipeline {
         AWS_SECRET_ACCESS_KEY        = credentials('jenkins-terraform-secret-access-key')
         HEROKU_API_KEY               = credentials('terraform-heroku-api-key')
 
+        TERRAFORM_S3_CREDENTIALS_ID  = 'terraform-aws-credentials'
         HEROKU_DEPLOY_CREDENTIALS_ID = 'heroku-deploy-key'
 
-        S3_BUCKET = 'bucket=mofo-terraform'
-        S3_PATH   = 'foundation-mozilla-org'
+        S3_BUCKET = 'mofo-terraform'
+        S3_PATH   = 'foundation-mozilla-org/'
         S3_REGION = 'region=us-east-1'
 
         DEV_APP_CONFIG_FILE        = 'dev.app.tfvars'
@@ -63,12 +64,12 @@ pipeline {
 
             steps {
                 echo 'planning dev...'
+                withAWS(credentials: "${TERRAFORM_S3_CREDENTIALS_ID}", region: 'us-east-1') {
+                    s3Download file: "${DEV_APP_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_APP_CONFIG_FILE}", force: true
+                    s3Download file: "${DEV_INFRA_CONFIG_FILE}", bucket: "${S3_BUCKET}", path: "${S3_PATH}${DEV_INFRA_CONFIG_FILE}", force: true
+                }
                 sh '''
                    cd ops
-
-                   aws s3 cp s3://${S3_BUCKET}/${S3_PATH}/${DEV_APP_CONFIG_FILE} ./$DEV_APP_CONFIG_FILE
-                   aws s3 cp s3://${S3_BUCKET}/${S3_PATH}/${DEV_INFRA_CONFIG_FILE} ./$DEV_INFRA_CONFIG_FILE
-
                    terraform remote config -backend=S3 -backend-config='${S3_BUCKET}' -backend-config='${DEV_STATE_KEY}' -backend-config='${S3_REGION}'
                    terraform plan \
                        --resource='${DEV_RESOURCE}' \
