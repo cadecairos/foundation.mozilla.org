@@ -26,9 +26,9 @@ pipeline {
         STAGING_INFRA_CONFIG_FILE    = 'staging.infrastructure.tfvars'
         PRODUCTION_INFRA_CONFIG_FILE = 'dev.infrastructure.tfvars'
 
-        DEV_RESOURCE        = 'foundation/dev'
-        STAGING_RESOURCE    = 'foundation/staging'
-        PRODUCTION_RESOURCE = 'foundation/production'
+        DEV_TARGET        = 'foundation/dev'
+        STAGING_TARGET    = 'foundation/staging'
+        PRODUCTION_TARGET = 'foundation/production'
 
         DEV_STATE_KEY        = 'key=foundation-mozilla-org/dev.tfstate'
         STAGING_STATE_KEY    = 'key=foundation-mozilla-org/staging.tfstate'
@@ -73,14 +73,14 @@ pipeline {
                    terraform workspace new dev
                    terraform state pull
                    terraform plan \
-                       --resource=$DEV_RESOURCE \
-                       -out=$DEV_PLAN \
-                       -var-file=$DEV_APP_CONFIG_FILE \
-                       -var-file=$DEV_INFRA_CONFIG_FILE \
+                       -input=false \
+                       -target=$DEV_TARGET \
                        -var='heroku_api_key=$HEROKU_API_KEY' \
                        -var='state_access_key=$AWS_ACCESS_KEY_ID' \
                        -var='state_secret_key=$AWS_SECRET_ACCESS_KEY' \
-                       -input=false
+                       -var-file=$DEV_APP_CONFIG_FILE \
+                       -var-file=$DEV_INFRA_CONFIG_FILE \
+                       -out=$DEV_PLAN
                    '''
             }
         }
@@ -125,7 +125,7 @@ pipeline {
                    cd ops
                    terraform workspace select staging
                    terraform plan \
-                       --resource='${DEV_RESOURCE}' \
+                       -target='${STAGING_TARGET}' \
                        -out='${STAGING_PLAN}' \
                        -var-file='${STAGING_APP_CONFIG_FILE}' \
                        -var-file='${STAGING_INFRA_CONFIG_FILE}' \
@@ -183,7 +183,7 @@ pipeline {
                    cd ops
                    terraform workspace select staging
                    terraform plan \
-                       --resource='${DEV_RESOURCE}' \
+                       -target='${PRODUCTION_TARGET}' \
                        -out='${PRODUCTION_PLAN}' \
                        -var-file='${PRODUCTION_APP_CONFIG_FILE}' \
                        -var-file='${PRODUCTION_INFRA_CONFIG_FILE}' \
