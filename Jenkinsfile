@@ -52,6 +52,7 @@ pipeline {
                 sh '''
                    cd ops
                    terraform init -input=false -backend-config=$STATE_CONFIG_FILE
+                   terraform state pull
                    '''
             }
         }
