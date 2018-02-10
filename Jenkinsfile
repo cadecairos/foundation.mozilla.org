@@ -104,6 +104,9 @@ pipeline {
                   def HEROKU_APP_NAME = readFile "${env.WORKSPACE}/ops/HEROKU_APP_NAME.txt"
                   def BUILD_VERSION = readFile "${env.WORKSPACE}/ops/BUILD_VERSION.txt"
 
+                  HEROKU_APP_NAME = HEROKU_APP_NAME.replaceAll("\n", "")
+                  BUILD_VERSION = BUILD_VERSION.replaceAll("\n", "")
+
                   httpRequest(
                     url: "https://api.heroku.com/apps/${HEROKU_APP_NAME}/build",
                     httpMode: "POST",
