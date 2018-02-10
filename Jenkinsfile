@@ -96,26 +96,32 @@ pipeline {
                        -lock=false \
                        -input=false \
                        $DEV_PLAN
-                   HEROKU_APP_NAME="$(terraform output heroku_app_name)"
-                   BUILD_VERSION="$(git rev-parse HEAD)"
+                   echo "$(terraform output heroku_app_name)" > HEROKU_APP_NAME.txt
+                   echo "$(git rev-parse HEAD)"> BUILD_VERSION.txt
                    '''
-                httpRequest(
-                  url: "https://api.heroku.com/apps/${HEROKU_APP_NAME}/build",
-                  httpMode: "POST",
-                  requestBody: '''
-                    {
-                      "source_blob": {
-                        "url": "https://github.com/cadecairos/foundation-mozilla-org/archive/master.tar.gz",
-                        "version": "${BUILD_VERSION}"
+                script {
+                  env.WORKSPACE = pwd()
+                  def HEROKU_APP_NAME = readFile "${env.WORKSPACE}/ops/HEROKU_APP_NAME.txt"
+                  def BUILD_VERSION = readFile "${env.WORKSPACE}/ops/BUILD_VERSION.txt"
+
+                  httpRequest(
+                    url: "https://api.heroku.com/apps/${HEROKU_APP_NAME}/build",
+                    httpMode: "POST",
+                    requestBody: '''
+                      {
+                        "source_blob": {
+                          "url": "https://github.com/cadecairos/foundation-mozilla-org/archive/master.tar.gz",
+                          "version": "${BUILD_VERSION}"
+                        }
                       }
-                    }
-                  ''',
-                  customHeaders: [
-                    [name: "Accept", value: "application/vnd.heroku+json; version=3"],
-                    [name: "Content-Type", value: "application/json"],
-                    [name: "Authorization", value: "${HEROKU_API_KEY}"]
-                  ]
-                )
+                    ''',
+                    customHeaders: [
+                      [name: "Accept", value: "application/vnd.heroku+json; version=3"],
+                      [name: "Content-Type", value: "application/json"],
+                      [name: "Authorization", value: "${HEROKU_API_KEY}"]
+                    ]
+                  )
+                }
             }
         }
 
