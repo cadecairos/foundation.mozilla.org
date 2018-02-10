@@ -7,11 +7,11 @@ pipeline {
     }
 
     environment {
-        AWS_ACCESS_KEY_ID            = credentials('jenkins-terraform-secret-key-id')
-        AWS_SECRET_ACCESS_KEY        = credentials('jenkins-terraform-secret-access-key')
+        HEROKU_API_KEY        = credentials('terraform-heroku-api-key')
+        AWS_ACCESS_KEY_ID     = credentials('jenkins-terraform-secret-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins-terraform-secret-access-key')
 
-        TERRAFORM_S3_CREDENTIALS_ID  = 'terraform-aws-credentials'
-        HEROKU_DEPLOY_CREDENTIALS_ID = 'heroku-deploy-key'
+        TERRAFORM_S3_CREDENTIALS_ID = 'terraform-aws-credentials'
 
         S3_BUCKET = 'mofo-terraform'
         S3_PATH   = 'foundation-mozilla-org/'
@@ -97,12 +97,11 @@ pipeline {
                        -input=false \
                        $DEV_PLAN
                    '''
-                sshagent(credentials: ['${HEROKU_DEPLOY_CREDENTIALS_ID}']) {
                     sh '''
                        cd ops
-                       git push $(terraform output heroku_git_url) HEAD:master
+                       HEROKU_APP_NAME='$(terraform output heroku_app_name)'
+                       git push https://$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME HEAD:master
                        '''
-                }
             }
         }
 
