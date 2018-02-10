@@ -108,7 +108,7 @@ pipeline {
                   BUILD_VERSION = BUILD_VERSION.replaceAll("\n", "")
 
                   httpRequest(
-                    url: "https://api.heroku.com/apps/${HEROKU_APP_NAME}/build",
+                    url: "https://api.heroku.com/apps/${HEROKU_APP_NAME}/builds",
                     httpMode: "POST",
                     requestBody: '''
                       {
