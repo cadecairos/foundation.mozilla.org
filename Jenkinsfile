@@ -99,7 +99,7 @@ pipeline {
                    '''
                     sh '''
                        cd ops
-                       HEROKU_APP_NAME=$(terraform output heroku_app_name)
+                       HEROKU_APP_NAME=`terraform output heroku_app_name`
                        git push https://$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME HEAD:master
                        '''
             }
