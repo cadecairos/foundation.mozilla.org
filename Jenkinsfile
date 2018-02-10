@@ -96,12 +96,26 @@ pipeline {
                        -lock=false \
                        -input=false \
                        $DEV_PLAN
+                   HEROKU_APP_NAME="$(terraform output heroku_app_name)"
+                   BUILD_VERSION="$(git rev-parse HEAD)"
                    '''
-                    sh '''
-                       cd ops
-                       HEROKU_APP_NAME="$(terraform output heroku_app_name)"
-                       git push https://:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:refs/head/master
-                       '''
+                httpRequest(
+                  url: 'https://api.heroku.com/apps/${HEROKU_APP_NAME}/build',
+                  httpMode: 'POST',
+                  requestBody: '''
+                    {
+                      "source_blob": {
+                        "url": "https://github.com/cadecairos/foundation-mozilla-org/archive/master.tar.gz",
+                        "version": "${BUILD_VERSION}"
+                      }
+                    }
+                  ''',
+                  customHeaders: [
+                    [name: 'Accept', value: 'application/vnd.heroku+json; version=3'],
+                    [name: 'Content-Type', value: 'application/json'],
+                    [name: 'Authorization', value: '${HEROKU_API_KEY}']
+                  ]
+                )
             }
         }
 
