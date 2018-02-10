@@ -97,7 +97,7 @@ pipeline {
                        -input=false \
                        $DEV_PLAN
                    '''
-                sshagent(['${HEROKU_DEPLOY_CREDENTIALS_ID}']) {
+                sshagent(credentials: ['${HEROKU_DEPLOY_CREDENTIALS_ID}']) {
                     sh '''
                        cd ops
                        git push $(terraform output heroku_git_url) HEAD:master
