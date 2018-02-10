@@ -121,7 +121,7 @@ pipeline {
                     customHeaders: [
                       [name: "Accept", value: "application/vnd.heroku+json; version=3"],
                       [name: "Content-Type", value: "application/json"],
-                      [name: "Authorization", value: "${HEROKU_API_KEY}"]
+                      [name: "Authorization", value: "Bearer ${HEROKU_API_KEY}"]
                     ]
                   )
                 }
