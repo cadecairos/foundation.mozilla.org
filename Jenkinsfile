@@ -100,8 +100,8 @@ pipeline {
                    BUILD_VERSION="$(git rev-parse HEAD)"
                    '''
                 httpRequest(
-                  url: 'https://api.heroku.com/apps/${HEROKU_APP_NAME}/build',
-                  httpMode: 'POST',
+                  url: "https://api.heroku.com/apps/${HEROKU_APP_NAME}/build",
+                  httpMode: "POST",
                   requestBody: '''
                     {
                       "source_blob": {
@@ -111,9 +111,9 @@ pipeline {
                     }
                   ''',
                   customHeaders: [
-                    [name: 'Accept', value: 'application/vnd.heroku+json; version=3'],
-                    [name: 'Content-Type', value: 'application/json'],
-                    [name: 'Authorization', value: '${HEROKU_API_KEY}']
+                    [name: "Accept", value: "application/vnd.heroku+json; version=3"],
+                    [name: "Content-Type", value: "application/json"],
+                    [name: "Authorization", value: "${HEROKU_API_KEY}"]
                   ]
                 )
             }
